@@ -4,7 +4,6 @@
 // Defines all constructs for a reference-based BST.
 // Supports three traversal orders Preorder, Postorder & Inorder ("natural")
 //---------------------------------------------------------------------------
-import support.BSTNode;
 
 import java.util.Comparator;
 import java.util.Iterator;
