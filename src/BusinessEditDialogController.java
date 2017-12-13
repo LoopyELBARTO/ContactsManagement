@@ -38,6 +38,7 @@ public class BusinessEditDialogController {
         businessNameField.setText(business.getBusinessName());
         addressField.setText(business.getAddresss());
         websiteField.setText(business.getWebsiteName());
+        emailField.setText(business.getEmail());
         phoneNumberField.setText(business.getPhoneNumber());
     }
     public boolean isOkClicked(){

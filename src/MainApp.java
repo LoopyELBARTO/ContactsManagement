@@ -34,7 +34,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.window = primaryStage;
-        this.window.setTitle("AddressApp");
+        this.window.setTitle("Contacts Management");
 
         initRootLayout();
 
