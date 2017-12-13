@@ -4,13 +4,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-public class PersonOverviewController {
+public class BusinessOverviewController {
     @FXML
-    private TableView<Person> personTable;
+    private TableView<Business> businessTable;
     @FXML
-    private TableColumn<Person, String> firstNameColumn;
+    private TableColumn<Business, String> businessNameColumn;
     @FXML
-    private TableColumn<Person, String> lastNameColumn;
+    private TableColumn<Business, String> lastNameColumn;
 
     @FXML
     private Label firstNameLabel;
@@ -20,6 +20,10 @@ public class PersonOverviewController {
     private Label businessLabel;
     @FXML
     private Label addressLabel;
+    @FXML
+    private Label websiteLabel;
+    @FXML
+    private Label emailLabel;
     @FXML
     private Label phoneNumberLabel;
     @FXML
@@ -31,7 +35,7 @@ public class PersonOverviewController {
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public PersonOverviewController() {
+    public BusinessOverviewController() {
     }
 
     /**
@@ -41,12 +45,12 @@ public class PersonOverviewController {
     @FXML
     private void initialize() {
         // Initialize the person table with the two columns.
-        firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+        businessNameColumn.setCellValueFactory(cellData -> cellData.getValue().businessNameProperty());
         lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
 
-        showPersonDetail(null);
-        personTable.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> showPersonDetail(newValue));
+        showBusinessDetail(null);
+        businessTable.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> showBusinessDetail(newValue));
     }
 
     /**
@@ -58,62 +62,66 @@ public class PersonOverviewController {
         this.mainApp = mainApp;
 
         // Add observable list data to the table
-        personTable.setItems(mainApp.getPersonData());
+        businessTable.setItems(mainApp.getBusinessData());
     }
 
-    private void showPersonDetail(Person person){
-        if (person != null){
-            firstNameLabel.setText(person.getFirstName());
-            lastNameLabel.setText(person.getLastName());
-            addressLabel.setText(person.getAddresss());
-            businessLabel.setText(person.getBusinessName());
-            phoneNumberLabel.setText(person.getPhoneNumber());
+    private void showBusinessDetail(Business business){
+        if (business != null){
+            firstNameLabel.setText(business.getFirstName());
+            lastNameLabel.setText(business.getLastName());
+            addressLabel.setText(business.getAddresss());
+            websiteLabel.setText(business.getWebsiteName());
+            emailLabel.setText(business.getEmail());
+            businessLabel.setText(business.getBusinessName());
+            phoneNumberLabel.setText(business.getPhoneNumber());
         }else {
             firstNameLabel.setText("");
             lastNameLabel.setText("");
             addressLabel.setText("");
             businessLabel.setText("");
+            websiteLabel.setText("");
+            emailLabel.setText("");
             phoneNumberLabel.setText("");
         }
     }
 
     @FXML
-    private void handleDeletePerson(){
-        int selectedIndex = personTable.getSelectionModel().getSelectedIndex();
+    private void handleDeleteBusiness(){
+        int selectedIndex = businessTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
-            personTable.getItems().remove(selectedIndex);
+            businessTable.getItems().remove(selectedIndex);
         }else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initOwner(mainApp.getPrimaryStage());
             alert.setTitle("No selection");
-            alert.setHeaderText("No Person is Selected");
+            alert.setHeaderText("No Business is Selected");
             alert.setContentText("Please select a person in the table");
 
             alert.showAndWait();
         }
     }
     @FXML
-    private void handleNewPerson(){
-        Person tempPerson = new Person();
-        boolean okClicked = mainApp.showPersonEditDialog(tempPerson);
+    private void handleNewBusiness(){
+        Business tempBusiness = new Business();
+        boolean okClicked = mainApp.showPersonEditDialog(tempBusiness);
         if (okClicked){
-            mainApp.getPersonData().add(tempPerson);
+            mainApp.getBusinessData().add(tempBusiness);
         }
     }
 
     @FXML
-    private void handleEditPerson(){
-        Person selectedPerson = personTable.getSelectionModel().getSelectedItem();
-        if (selectedPerson != null){
-            boolean okClicked = mainApp.showPersonEditDialog(selectedPerson);
+    private void handleEditBusiness(){
+        Business selectedBusiness = businessTable.getSelectionModel().getSelectedItem();
+        if (selectedBusiness != null){
+            boolean okClicked = mainApp.showPersonEditDialog(selectedBusiness);
             if (okClicked){
-                showPersonDetail(selectedPerson);
+                showBusinessDetail(selectedBusiness);
             }
         }else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.initOwner(mainApp.getPrimaryStage());
             alert.setTitle("No Selection");
-            alert.setHeaderText("No Person Selectd");
+            alert.setHeaderText("No Business Selectd");
             alert.setContentText("Please select a person in the table. ");
 
             alert.showAndWait();

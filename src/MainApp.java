@@ -1,38 +1,40 @@
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 public class MainApp extends Application {
 
 
-    private Stage primaryStage;
+    private Stage window;
     private BorderPane rootLayout;
 
-    private ObservableList<Person> personData = FXCollections.observableArrayList();
+    private ObservableList<Business> businessesData = FXCollections.observableArrayList();
 
     public MainApp(){
-        personData.add(new Person("Bob", "Builder"));
-        personData.add(new Person("Ricky", "Bobby"));
-        personData.add(new Person("Chicken", "Run"));
-        personData.add(new Person("Johnson", "Mate"));
+        businessesData.add(new Business("Ex.INC", "Ample"));
     }
 
-    public ObservableList<Person> getPersonData(){
-        return personData;
+    public ObservableList<Business> getBusinessData(){
+        return businessesData;
     }
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("AddressApp");
+        this.window = primaryStage;
+        this.window.setTitle("AddressApp");
 
         initRootLayout();
 
@@ -46,23 +48,32 @@ public class MainApp extends Application {
             rootLayout = (BorderPane) loader.load();
 
             Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            window.setScene(scene);
+
+            RootLayoutController controller = loader.getController();
+            controller.setMainApp(this);
+
+            window.show();
         }
         catch (IOException e){
             e.printStackTrace();
+        }
+
+        File file = getBusinessFilePath();
+        if (file != null){
+            loadBusinessDataFromFile(file);
         }
     }
 
     private void showPersonOverview() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("PersonOverview.fxml"));
+            loader.setLocation(MainApp.class.getResource("BusinessOverview.fxml"));
             AnchorPane personOverview = (AnchorPane) loader.load();
 
             rootLayout.setCenter(personOverview);
 
-            PersonOverviewController controller = loader.getController();
+            BusinessOverviewController controller = loader.getController();
             controller.setMainApp(this);
         }
         catch (IOException e){
@@ -70,25 +81,25 @@ public class MainApp extends Application {
         }
     }
     public Stage getPrimaryStage(){
-        return primaryStage;
+        return window;
     }
 
-    public boolean showPersonEditDialog(Person person){
+    public boolean showPersonEditDialog(Business business){
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("PersonEditDialog.fxml"));
+            loader.setLocation(MainApp.class.getResource("BusinessEditDialog.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Edit Person");
             dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(primaryStage);
+            dialogStage.initOwner(window);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
 
-            PersonEditDialogController controller = loader.getController();
+            BusinessEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
-            controller.setPerson(person);
+            controller.setPerson(business);
 
             dialogStage.showAndWait();
 
@@ -99,6 +110,72 @@ public class MainApp extends Application {
         }
     }
 
+    public File getBusinessFilePath(){
+        Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
+        String filePath = preferences.get("filePath", null);
+        if (filePath != null) {
+            return new File(filePath);
+        }
+        else {
+            return null;
+        }
+    }
+
+    public void setBusinessFilePath(File file){
+        Preferences preferences = Preferences.systemNodeForPackage(MainApp.class);
+        if (file != null){
+            preferences.put("filePath", file.getPath());
+            window.setTitle("Contact Management - " + file.getName());
+        }else {
+            preferences.remove("filePath");
+            window.setTitle("Contact Management");
+        }
+    }
+
+    public void loadBusinessDataFromFile(File file){
+        try{
+            JAXBContext context = JAXBContext.newInstance(BusinessListWrapper.class);
+            //this deserialize xml data to be access by java
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+
+            //Read xml and unmarshall
+            BusinessListWrapper wrapper = (BusinessListWrapper) unmarshaller.unmarshal(file);
+
+            businessesData.clear();
+            businessesData.addAll(wrapper.getBusiness());
+
+            //save the xml
+            setBusinessFilePath(file);
+        } catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Could not load data");
+            alert.setContentText("Could not load from file:\n" + file.getPath());
+
+            alert.showAndWait();
+        }
+    }
+    public void saveBusinessDataToFile(File file){
+        try {
+            JAXBContext context = JAXBContext.newInstance(BusinessListWrapper.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            BusinessListWrapper wrapper = new BusinessListWrapper();
+            wrapper.setBusiness(businessesData);
+
+            marshaller.marshal(wrapper, file);
+
+            setBusinessFilePath(file);
+        } catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Could not save data");
+            alert.setContentText("Could not save data to file:\n" + file.getPath());
+
+            alert.showAndWait();
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);

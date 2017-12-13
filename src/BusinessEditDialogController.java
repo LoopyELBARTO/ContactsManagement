@@ -3,7 +3,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class PersonEditDialogController {
+public class BusinessEditDialogController {
     @FXML
     private TextField firstNameField;
     @FXML
@@ -13,10 +13,14 @@ public class PersonEditDialogController {
     @FXML
     private TextField addressField;
     @FXML
+    private TextField websiteField;
+    @FXML
+    private TextField emailField;
+    @FXML
     private TextField phoneNumberField;
 
     private Stage dialogStage;
-    private Person person;
+    private Business business;
     private boolean okClicked = false;
 
     private void initialize(){
@@ -26,14 +30,15 @@ public class PersonEditDialogController {
         this.dialogStage = dialogStage;
     }
 
-    public void setPerson(Person person){
-        this.person = person;
+    public void setPerson(Business business){
+        this.business = business;
 
-        firstNameField.setText(person.getFirstName());
-        lastNameField.setText(person.getLastName());
-        businessNameField.setText(person.getBusinessName());
-        addressField.setText(person.getAddresss());
-        phoneNumberField.setText(person.getPhoneNumber());
+        firstNameField.setText(business.getFirstName());
+        lastNameField.setText(business.getLastName());
+        businessNameField.setText(business.getBusinessName());
+        addressField.setText(business.getAddresss());
+        websiteField.setText(business.getWebsiteName());
+        phoneNumberField.setText(business.getPhoneNumber());
     }
     public boolean isOkClicked(){
         return okClicked;
@@ -41,11 +46,13 @@ public class PersonEditDialogController {
     @FXML
     private void handleOk(){
         if (isInputValid()){
-            person.setFirstName(firstNameField.getText());
-            person.setLastName(lastNameField.getText());
-            person.setBusinessName(businessNameField.getText());
-            person.setAddresss(addressField.getText());
-            person.setPhoneNumber(phoneNumberField.getText());
+            business.setFirstName(firstNameField.getText());
+            business.setLastName(lastNameField.getText());
+            business.setBusinessName(businessNameField.getText());
+            business.setAddresss(addressField.getText());
+            business.setWebsiteName(websiteField.getText());
+            business.setEmail(emailField.getText());
+            business.setPhoneNumber(phoneNumberField.getText());
 
             okClicked = true;
             dialogStage.close();
@@ -69,6 +76,12 @@ public class PersonEditDialogController {
         }
         if (addressField.getText() == null || addressField.getText().length() == 0){
             errorMessage += "No valid address! \n";
+        }
+        if (websiteField.getText() == null || websiteField.getText().length() == 0){
+            errorMessage += "No valid website entry! \n";
+        }
+        if (emailField.getText() == null || emailField.getText().length() == 0){
+            errorMessage += "No valid email was entered";
         }
         if (phoneNumberField.getText() == null || phoneNumberField.getText().length() == 0){
             errorMessage += "No valid phone number! \n";

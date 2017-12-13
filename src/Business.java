@@ -1,24 +1,28 @@
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class Person {
+public class Business {
     private final StringProperty firstName;
     private final StringProperty lastName;
     private final StringProperty addresss;
     private final StringProperty businessName;
+    private final StringProperty websiteName;
+    private final StringProperty email;
     private final StringProperty phoneNumber;
 
-    public Person(){
+    public Business(){
 
         this(null, null);
     }
-    public Person(String firstName, String lastName){
-        this.firstName = new SimpleStringProperty(firstName);
+    public Business(String businessName, String lastName){
+        this.businessName = new SimpleStringProperty(businessName);
         this.lastName = new SimpleStringProperty(lastName);
 
-        this.addresss = new SimpleStringProperty("some street");
-        this.businessName = new SimpleStringProperty("some business");
-        this.phoneNumber = new SimpleStringProperty("12345");
+        this.firstName = new SimpleStringProperty("example");
+        this.websiteName = new SimpleStringProperty("example.com");
+        this.email = new SimpleStringProperty("email@mail.com");
+        this.addresss = new SimpleStringProperty("123 steet ave");
+        this.phoneNumber = new SimpleStringProperty("123456789");
     }
     public String getFirstName() {
         return firstName.get();
@@ -82,4 +86,27 @@ public class Person {
         this.phoneNumber.set(phoneNumber);
     }
 
+    public String getWebsiteName() {
+        return websiteName.get();
+    }
+
+    public StringProperty websiteNameProperty() {
+        return websiteName;
+    }
+
+    public void setWebsiteName(String websiteName) {
+        this.websiteName.set(websiteName);
+    }
+
+    public String getEmail() {
+        return email.get();
+    }
+
+    public StringProperty emailProperty() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email.set(email);
+    }
 }
