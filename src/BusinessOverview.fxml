@@ -67,6 +67,7 @@
                       <Button mnemonicParsing="false" onAction="#handleNewBusiness" text="New" />
                         <Button mnemonicParsing="false" onAction="#handleEditBusiness" text="Edit" />
                         <Button mnemonicParsing="false" onAction="#handleDeleteBusiness" text="Delete" />
+                        <Button mnemonicParsing="false" onAction="#handleBusinessSearch" text="Search" />
                     </buttons>
                   </ButtonBar>
                </children>

@@ -66,6 +66,7 @@ public class RootLayoutController {
             mainApp.saveBusinessDataToFile(file);
         }
     }
+
     @FXML
     private void handleExit() {
         System.exit(0);

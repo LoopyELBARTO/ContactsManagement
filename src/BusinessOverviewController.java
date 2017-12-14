@@ -128,4 +128,13 @@ public class BusinessOverviewController {
         }
     }
 
+    @FXML
+    private void handleBusinessSearch(){
+        Business tempBusiness = new Business();
+        boolean okClicked = mainApp.showSearchDialog(tempBusiness);
+        if (okClicked){
+            mainApp.getBusinessData();
+        }
+    }
+
 }

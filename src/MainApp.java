@@ -1,3 +1,4 @@
+import ch07.trees.BinarySearchTree;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +24,7 @@ public class MainApp extends Application {
     private BorderPane rootLayout;
 
     private ObservableList<Business> businessesData = FXCollections.observableArrayList();
+    private BinarySearchTree<String> bstBusinessData = new BinarySearchTree<>();
 
     public MainApp(){
         businessesData.add(new Business("Ex.INC", "Ample"));
@@ -109,6 +111,32 @@ public class MainApp extends Application {
             return false;
         }
     }
+    public boolean showSearchDialog(Business business){
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("SearchDialog.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Search");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(window);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            SearchDialogController controller =loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setMainApp(this);
+
+            dialogStage.showAndWait();
+
+            return controller.isOkClicked();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public File getBusinessFilePath(){
         Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
@@ -143,7 +171,7 @@ public class MainApp extends Application {
 
             businessesData.clear();
             businessesData.addAll(wrapper.getBusiness());
-
+            bstBusinessData.add(String.valueOf(businessesData.addAll(wrapper.getBusiness())));
             //save the xml
             setBusinessFilePath(file);
         } catch (Exception e){
