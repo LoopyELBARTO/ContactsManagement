@@ -1,29 +1,23 @@
-import ch07.trees.BinarySearchTree;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.net.URL;
 import java.util.Iterator;
-import java.util.ResourceBundle;
 
 public class SearchDialogController {
-    Iterator<String> iterator;
-    Business business = new Business();
-
     private Stage dialogStage;
     private boolean okClicked = false;
 
+    private ObservableList<Business> businessesSearchData = FXCollections.observableArrayList();
+
     private MainApp mainApp;
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private TextField filterTextField;
@@ -57,7 +51,6 @@ public class SearchDialogController {
 
     @FXML
     private Label phoneNumberLabel;
-    FilteredList<Business> filterData = new FilteredList<>(mainApp.getBusinessData(), p ->true);
 
 
     @FXML
@@ -65,14 +58,11 @@ public class SearchDialogController {
         businessNameColumn.setCellValueFactory(cellData -> cellData.getValue().businessNameProperty());
         lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
 
-        showBusinessDetail(null);
-        businessSearchTable.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> showBusinessDetail(newValue));
-
+        FilteredList<Business>  filterData = new FilteredList<>(businessesSearchData, p -> true);
 
         filterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             filterData.setPredicate(business -> {
-                // If filter text is empty, display all persons.
+                // If filter text is empty, display all business.
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
@@ -97,12 +87,18 @@ public class SearchDialogController {
         // 5. Add sorted (and filtered) data to the table.
         businessSearchTable.setItems(sortedData);
 
+        //Display selected business's details.
+        showBusinessDetail(null);
+        businessSearchTable.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> showBusinessDetail(newValue));
     }
+
+    //Method for showing details of the filtered business
     private void showBusinessDetail(Business business){
         if (business != null){
             firstNameLabel.setText(business.getFirstName());
             lastNameLabel.setText(business.getLastName());
-            addressLabel.setText(business.getAddresss());
+            addressLabel.setText(business.getAddress());
             websiteLabel.setText(business.getWebsiteName());
             emailLabel.setText(business.getEmail());
             businessNameLabel.setText(business.getBusinessName());
@@ -118,10 +114,11 @@ public class SearchDialogController {
         }
     }
 
-    public void setMainApp(MainApp mainApp){
+    //links mainBusinessData to businessSearchData
+    public void setTableView(MainApp mainApp){
         this.mainApp = mainApp;
-
-        businessSearchTable.setItems(mainApp.getBusinessData());
+        this.businessesSearchData.setAll(mainApp.businessesData);
+        //this.businessesSearchData.addAll(mainApp.businessesData);
     }
 
     public void setDialogStage(Stage dialogStage){
@@ -130,5 +127,4 @@ public class SearchDialogController {
     public boolean isOkClicked(){
         return okClicked;
     }
-
 }

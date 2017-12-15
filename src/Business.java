@@ -4,16 +4,21 @@ import javafx.beans.property.StringProperty;
 public class Business {
     private final StringProperty firstName;
     private final StringProperty lastName;
-    private final StringProperty addresss;
+    private final StringProperty address;
     private final StringProperty businessName;
     private final StringProperty websiteName;
     private final StringProperty email;
     private final StringProperty phoneNumber;
 
+    //Default constuctor
+
+
     public Business(){
 
         this(null, null);
     }
+
+    //This is a dummy example data, but also takes a parameter to set data when its called
     public Business(String businessName, String lastName){
         this.businessName = new SimpleStringProperty(businessName);
         this.lastName = new SimpleStringProperty(lastName);
@@ -21,9 +26,10 @@ public class Business {
         this.firstName = new SimpleStringProperty("example");
         this.websiteName = new SimpleStringProperty("example.com");
         this.email = new SimpleStringProperty("email@mail.com");
-        this.addresss = new SimpleStringProperty("123 steet ave");
+        this.address = new SimpleStringProperty("123 steet ave");
         this.phoneNumber = new SimpleStringProperty("123456789");
     }
+    //Setters and getter for the StringProperties
     public String getFirstName() {
         return firstName.get();
     }
@@ -48,19 +54,17 @@ public class Business {
         this.lastName.set(lastName);
     }
 
-    public String getAddresss() {
-        return addresss.get();
+    public String getAddress() {
+        return address.get();
     }
 
-    public StringProperty addresssProperty() {
-        return addresss;
+    public StringProperty addressProperty() {
+        return address;
     }
 
-    public void setAddresss(String addresss) {
-        this.addresss.set(addresss);
+    public void setAddress(String address) {
+        this.address.set(address);
     }
-
-
     public String getBusinessName() {
         return businessName.get();
     }

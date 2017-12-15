@@ -23,34 +23,40 @@ public class BusinessEditDialogController {
     private Business business;
     private boolean okClicked = false;
 
+    @FXML
     private void initialize(){
 
     }
+
+    //This is a setter for the dialogStage when called from the MainApp
     public void setDialogStage(Stage dialogStage){
         this.dialogStage = dialogStage;
     }
 
-    public void setPerson(Business business){
+    //This method sets data from what the user iputs in the edits
+    public void setBusiness(Business business){
         this.business = business;
 
         firstNameField.setText(business.getFirstName());
         lastNameField.setText(business.getLastName());
         businessNameField.setText(business.getBusinessName());
-        addressField.setText(business.getAddresss());
+        addressField.setText(business.getAddress());
         websiteField.setText(business.getWebsiteName());
         emailField.setText(business.getEmail());
         phoneNumberField.setText(business.getPhoneNumber());
     }
+
     public boolean isOkClicked(){
         return okClicked;
     }
+    //this handles the functionality of the OK button
     @FXML
     private void handleOk(){
         if (isInputValid()){
             business.setFirstName(firstNameField.getText());
             business.setLastName(lastNameField.getText());
             business.setBusinessName(businessNameField.getText());
-            business.setAddresss(addressField.getText());
+            business.setAddress(addressField.getText());
             business.setWebsiteName(websiteField.getText());
             business.setEmail(emailField.getText());
             business.setPhoneNumber(phoneNumberField.getText());
@@ -64,6 +70,7 @@ public class BusinessEditDialogController {
         dialogStage.close();
     }
 
+    //This ensures that the user have entered a valid value in each field
     private boolean isInputValid(){
         String errorMessage = "";
         if (firstNameField.getText() == null || firstNameField.getText().length() == 0){
@@ -88,6 +95,7 @@ public class BusinessEditDialogController {
             errorMessage += "No valid phone number! \n";
         }
 
+        //if the user does not meet the requirements, a error dialog box will appear
         if (errorMessage.length() == 0){
             return true;
         }else {

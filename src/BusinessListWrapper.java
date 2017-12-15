@@ -2,7 +2,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement(name = "business")
+//This would allow the Marshalling of java objects into XML format
+@XmlRootElement(name = "businesses")
 public class BusinessListWrapper {
     private List<Business> business;
 
